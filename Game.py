@@ -1,6 +1,6 @@
 from telebot.types import User
 from scoreboard import ScoreBoard
-from lookups import choose_letters_combination
+from lookups import choose_letters_combination, number_to_emoji
 import time
 
 
@@ -19,7 +19,7 @@ class Game:
         raise GameEndedException("Game already ended! no more correct answers exist")
         points = 0
         # check if correct answer, then evaluate how many points should be given, else keep 0
-        points = evaluated value
+        points = 1
         self.scores.addPoints(points, player)
         # return points for the bot to know if the answer was right and reply to the player if so
         return points

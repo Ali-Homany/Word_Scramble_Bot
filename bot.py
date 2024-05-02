@@ -7,19 +7,19 @@ from Game import Game, GameEndedException
 
 
 class Bot:
-    def __init__(self, token: str):
-        """
-        When initiated, it creates a bot and defines its messages handlers
+    """
+    When initiated, it creates a bot and defines its message handlers
 
-        Attributes:
-            - bot (TeleBot) object defined using its token
-            - games: dictionary of active group_chat_id:Game. A group is removed when its game ends
-        """
+    Attributes:
+        - bot (TeleBot) object defined using its token
+        - games: dictionary of active group_chat_id:Game. A group is removed when its game ends
+    """
+    def __init__(self, token: str):
         self.bot = telebot.TeleBot(token=token)
         self.games: dict[str: Game] = {}
 
         @self.bot.message_handler(commands=['start', 'help'])
-        def introduce_bot(message: Message):
+        def introduce_bot(message):
             """
             This method introduces the bot to new chats or those who requested help
             """
@@ -39,7 +39,7 @@ class Bot:
 
         @self.bot.message_handler(function= lambda x: True)
         def handle_any(message):
-            if message.chat.id in self.games.keys():
+            if message.chat.id in self.games.keys() and all(char not in message.text for char in ' !@#$%^&*( )_+-=[]{}|;:,.<>?/\\0123456789'):
                 self.checkAnswer(message=message)
 
     def run(self) -> None:
@@ -76,12 +76,13 @@ class Bot:
             - message (Message): the message that was sent to the bot to be checked
         """
         chat_id = message.chat.id
-        curr_game: Game = self.games[chat_id]
-        points = curr_game.addPoints(player=message.from_user, answer=message.text)
+        curr_game = self.games[chat_id]
+        points = curr_game.addPoints(player=message.from_user, answer=message.text.lower())
         try:
-            if points == 0:
-                return
             if points == -1:
+                return
+            if points == 0:
+                # reply_to is not tested before
                 self.bot.reply_to(message=message, text="Already answered word")
             else:
                 self.bot.reply_to(message=message, text=Messages.CORRECT_ANSWER(points))

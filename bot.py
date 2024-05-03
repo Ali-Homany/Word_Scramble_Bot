@@ -16,7 +16,7 @@ class Bot:
     """
     def __init__(self, token: str):
         self.bot = telebot.TeleBot(token=token)
-        self.games: dict[str: Game] = {}
+        self.games: dict[str, Game] = {}
 
         @self.bot.message_handler(commands=['start', 'help'])
         def introduce_bot(message):
@@ -37,7 +37,7 @@ class Bot:
             if message.chat.id in self.games.keys():
                 self.endGame(group_id=message.chat.id)
 
-        @self.bot.message_handler(function= lambda x: True)
+        @self.bot.message_handler(func= lambda message: True)
         def handle_any(message):
             if message.chat.id in self.games.keys() and all(char not in message.text for char in ' !@#$%^&*( )_+-=[]{}|;:,.<>?/\\0123456789'):
                 self.checkAnswer(message=message)
@@ -77,8 +77,8 @@ class Bot:
         """
         chat_id = message.chat.id
         curr_game = self.games[chat_id]
-        points = curr_game.addPoints(player=message.from_user, answer=message.text.lower())
         try:
+            points = curr_game.addPoints(player=message.from_user, answer=message.text.lower())
             if points == -1:
                 return
             if points == 0:

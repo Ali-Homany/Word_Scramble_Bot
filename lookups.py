@@ -7,10 +7,12 @@ This module contains all the lookups for the bot and other files
 It also contains some helper methods
 """
 
+MAX_DURATION = 20
+
 
 class Messages:
     INTRO = lambda group_type: "Hello my friend" + 's' * int(group_type != "private") + "\nI can help you play and compete in Word Scramble Game. Whenever you wanna play, just hit /play."
-    START_GAME = lambda letters: f"Game has started!\nTry to create words from those letters:\n{', '.join([l for l in letters])}"
+    START_GAME = lambda letters: f"Game has started!\nTry to create words from those letters:\n{', '.join([l for l in letters])}\nYou have {MAX_DURATION} seconds"
     CORRECT_ANSWER = lambda points: f"Great !\nyou gained {number_to_emoji(points)} points"
     ALREADY_PLAYING = "you are already playing guys, you cannot play 2 games at the same time"
 
@@ -29,16 +31,17 @@ def number_to_emoji(number: int) -> str:
     return digits[number % 10]
 
 
-def convert_time(seconds: int) -> str:
+def convert_time(seconds: float) -> str:
     """
     Converts time in seconds into minutes and seconds format.
     
     Args:
-      seconds (int): Time in seconds.
+      seconds (float): Time in seconds.
     
     Returns:
       str: Time in minutes and seconds format (e.g., "5 mins 30 secs").
     """
+    seconds = int(seconds)
     mins = seconds // 60
     remaining_secs = seconds % 60
 
@@ -56,5 +59,6 @@ def choose_letters_combination() -> list[list]:
     # unrevised code below
     with open(DATA_JSON, 'r') as file:
         data = json.load(file)
-    letters_combination = [letter for letter in random.choice(data.keys())]
-    return [letters_combination, data[letters_combination]]
+    key = random.choice(list(data.keys()))
+    letters_combination = [letter for letter in key]
+    return [letters_combination, data[key]]

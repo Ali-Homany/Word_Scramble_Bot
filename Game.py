@@ -1,6 +1,6 @@
 from telebot.types import User
 from scoreboard import ScoreBoard
-from lookups import choose_letters_combination, convert_time
+from lookups import choose_letters_combination, convert_time, MAX_DURATION
 import time
 
 
@@ -45,6 +45,8 @@ class Game:
 
       self.prev_answers.append(answer)
       self.scores.addPoints(points, player)
+      if time.time() - self.start_time >= MAX_DURATION:
+        raise GameEndedException("Game maximum duration has ended")
       return points
 
     def displayGame(self) -> str:
@@ -52,11 +54,11 @@ class Game:
       Returns:
           str: The results of the game when it ends, including the final scoreboard, the winner, and the time it took to complete the game.
       """
-      if not self.scoreboard.scores:
-        return "There is no winner coz no one played"
+      if not self.scores.scores:
+        return "Game Over! There is no winner"
       
       # calculate the time taken to complete the game
-      total_time = convert_time(time.time() - self.start_time)
+      total_time = time.time() - self.start_time
   
       winner = self.scores.getWinner()
       scoreboard = self.scores.displayScores()
@@ -64,7 +66,7 @@ class Game:
       results = f"Game Over!\n\n"
       results += f"{scoreboard}\n\n"
       results += f"Winner: {winner}\n\n"
-      results += f"Time taken: {total_time:.2f}"
-  
+      results += f"Time taken: {convert_time(total_time)}"
+
       return results
   

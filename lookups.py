@@ -7,7 +7,7 @@ This module contains all the lookups for the bot and other files
 It also contains some helper methods
 """
 
-MAX_DURATION = 20
+MAX_DURATION = 40
 
 
 class Messages:
@@ -15,10 +15,6 @@ class Messages:
     START_GAME = lambda letters: f"Game has started!\nTry to create words from those letters:\n{', '.join([l for l in letters])}\nYou have {MAX_DURATION} seconds"
     CORRECT_ANSWER = lambda points: f"Great !\nyou gained {number_to_emoji(points)} points"
     ALREADY_PLAYING = "you are already playing guys, you cannot play 2 games at the same time"
-
-
-class Keys:
-    TOKEN = "token"
 
 
 def number_to_emoji(number: int) -> str:

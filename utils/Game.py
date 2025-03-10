@@ -1,7 +1,7 @@
-from telebot.types import User
-from scoreboard import ScoreBoard
-from lookups import choose_letters_combination, convert_time, MAX_DURATION
 import time
+from telebot.types import User
+from utils.scoreboard import ScoreBoard
+from utils.lookups import choose_letters_combination, convert_time, MAX_DURATION
 
 
 class GameEndedException (RuntimeError):

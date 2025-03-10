@@ -1,9 +1,9 @@
-import threading
 import time
 import telebot
+import threading
 from telebot.types import Message, Chat
-from lookups import Messages, MAX_DURATION
-from Game import Game, GameEndedException
+from utils.lookups import Messages, MAX_DURATION
+from utils.Game import Game, GameEndedException
 
 """
 This modules defines the telegram bot that will interact with players and manage different instanes of Game simultaneously

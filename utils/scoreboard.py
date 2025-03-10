@@ -1,5 +1,5 @@
 from telebot.types import User
-from lookups import number_to_emoji
+from utils.lookups import number_to_emoji
 
 
 class ScoreBoard:
